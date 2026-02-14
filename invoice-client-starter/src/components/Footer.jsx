@@ -16,7 +16,7 @@ const Footer = () => {
                     </li>
                 </ul>
                 <small>
-                    © {new Date().getFullYear()} Fakturační aplikace – Václav Pém
+                    © {new Date().getFullYear()} Fakturační aplikace – Jan Galčan
                 </small>
             </div>
         </footer>
