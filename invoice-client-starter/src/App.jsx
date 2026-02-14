@@ -42,64 +42,80 @@ import InvoiceSearch from "./invoices/InvoiceSearch";
 import PersonSearch from "./persons/PersonSearch";
 import InvoiceSales from "./invoices/InvoiceSales";
 import InvoicePurchases from "./invoices/InvoicePurchases";
+import Footer from "./components/Footer";
+
 export function App() {
   return (
     <Router>
-      <div className="container">
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-          <ul className="navbar-nav mr-auto">
-            <li className="nav-item">
-              <Link to={"/persons"} className="nav-link">
-                Osoby
-              </Link>
-              <Link to={"/invoices"} className="nav-link">
-                Faktury
-              </Link>             
-              <Link to={"api/statistics/invoices/"} className="nav-link">
-                Statistiky faktur
-              </Link>
-              <Link to={"api/statistics/persons/"} className="nav-link">
-                Statistiky osob
-              </Link>
-              <Link to={"/invoices/search"} className="nav-link">
-                Vyhledávání faktur
-              </Link>
-              <Link to={"/persons/search"} className="nav-link">
-                Vyhledávání osob
-              </Link>
-              
-            </li>
-          </ul>
-        </nav>
+      <div className="d-flex min-vh-100">
 
-        <Routes>
-          <Route index element={<Navigate to={"/persons"} />} />
-          <Route path="/persons">
-            <Route index element={<PersonIndex />} />
-            <Route path="show/:id" element={<PersonDetail />} />
-            <Route path="create" element={<PersonForm />} />
-            <Route path="edit/:id" element={<PersonForm />} />
-          </Route>
-          <Route index element={<Navigate to={"/invoices"} />} />
-          <Route path="/invoices">
-            <Route index element={<InvoiceIndex />} />
-            <Route path="show/:id" element={<InvoiceDetail />} />
-            <Route path="create" element={<InvoiceForm />} />
-            <Route path="edit/:id" element={<InvoiceForm />} />
-          </Route>
-          <Route path="api/statistics/invoices/">
-            <Route index element={<StatisticIndex />} />           
-          </Route>
-          <Route path="api/statistics/persons/">
-            <Route index element={<PersonStatisticIndex />} />        
-          </Route>
-          <Route path="/invoices/search" element={<InvoiceSearch />} />
-          <Route path="/persons/search" element={<PersonSearch />} />
-          <Route path="/persons/:ico/sales" element={<InvoiceSales />} />
-          <Route path="/persons/:ico/purchases" element={<InvoicePurchases />} />
+        {/* LEVÁ NAVIGACE */}
+        <aside className="bg-light border-end" style={{ width: "250px" }}>
+          <div className="p-3">
+            <h5>Menu</h5>
+            <ul className="nav flex-column">
+              <li className="nav-item">
+                <Link to="/persons" className="nav-link">Osoby</Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/invoices" className="nav-link">Faktury</Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/invoices/search" className="nav-link">Vyhledávání faktur</Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/persons/search" className="nav-link">Vyhledávání osob</Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/api/statistics/invoices/" className="nav-link">
+                  Statistiky faktur
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/api/statistics/persons/" className="nav-link">
+                  Statistiky osob
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </aside>
 
-          
-        </Routes>
+        {/* PRAVÁ ČÁST – OBSAH + FOOTER */}
+        <div className="d-flex flex-column flex-grow-1">
+
+          {/* HLAVNÍ OBSAH */}
+          <main className="container flex-grow-1 mt-4">
+            <Routes>
+              <Route index element={<Navigate to="/persons" />} />
+
+              <Route path="/persons">
+                <Route index element={<PersonIndex />} />
+                <Route path="show/:id" element={<PersonDetail />} />
+                <Route path="create" element={<PersonForm />} />
+                <Route path="edit/:id" element={<PersonForm />} />
+              </Route>
+
+              <Route path="/invoices">
+                <Route index element={<InvoiceIndex />} />
+                <Route path="show/:id" element={<InvoiceDetail />} />
+                <Route path="create" element={<InvoiceForm />} />
+                <Route path="edit/:id" element={<InvoiceForm />} />
+              </Route>
+
+              <Route path="/invoices/search" element={<InvoiceSearch />} />
+              <Route path="/persons/search" element={<PersonSearch />} />
+              <Route path="/persons/:ico/sales" element={<InvoiceSales />} />
+              <Route path="/persons/:ico/purchases" element={<InvoicePurchases />} />
+
+              <Route path="/api/statistics/invoices/" element={<StatisticIndex />} />
+              <Route path="/api/statistics/persons/" element={<PersonStatisticIndex />} />
+            </Routes>
+          </main>
+
+          {/* FOOTER */}
+          <Footer />
+
+        </div>
       </div>
     </Router>
   );
