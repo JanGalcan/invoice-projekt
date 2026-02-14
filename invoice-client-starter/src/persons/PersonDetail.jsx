@@ -24,6 +24,7 @@ import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import {apiGet} from "../utils/api";
 import Country from "./Country";
+import { Link } from "react-router-dom";
 
 
 const PersonDetail = () => {
@@ -78,8 +79,26 @@ const PersonDetail = () => {
                     <br/>
                     {person.note}
                 </p>
+                {person.identificationNumber && (
+                    <>
+                        <Link
+                            className="btn btn-outline-primary mt-3 me-2"
+                            to={`/persons/${person.identificationNumber}/sales`}
+                        >
+                            Prodeje osoby
+                        </Link>
+
+                        <Link
+                            className="btn btn-outline-secondary mt-3"
+                            to={`/persons/${person.identificationNumber}/purchases`}
+                        >
+                            Nákupy osoby
+                        </Link>
+                    </>
+                )}
             </div>
         </>
+       
     );
 };
 

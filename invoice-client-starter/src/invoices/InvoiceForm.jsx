@@ -1,20 +1,16 @@
-import React, {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-import {apiGet, apiPost, apiPut} from "../utils/api";
+import { apiGet, apiPost, apiPut } from "../utils/api";
 
 import InputField from "../components/InputField";
-import InputCheck from "../components/InputCheck";
-import FlashMessage from "../components/FlashMessage";
 import InputSelect from "../components/InputSelect";
-
-
-import PersonForm from "../persons/PersonForm"; 
-import PersonDetail from "../persons/PersonDetail";
+import FlashMessage from "../components/FlashMessage";
 
 const InvoiceForm = () => {
     const navigate = useNavigate();
-    const {id} = useParams();
+    const { id } = useParams();
+
     const [invoice, setInvoice] = useState({
         invoiceNumber: "",
         seller: "",
@@ -25,169 +21,154 @@ const InvoiceForm = () => {
         price: "",
         vat: "",
         note: "",
-        
     });
-    const [sentState, setSent] = useState(false);
-    const [successState, setSuccess] = useState(false);
-    const [errorState, setError] = useState(null);
+
+    const [persons, setPersons] = useState([]);
+    const [sent, setSent] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
+        apiGet("/api/persons").then((data) => setPersons(data));
+
         if (id) {
-            apiGet("/api/invoices/" + id).then((data) => setInvoice(data));           
+            apiGet("/api/invoices/" + id).then((data) => setInvoice(data));
         }
     }, [id]);
-    
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        (id ? apiPut("/api/invoices/" + id, invoice) : apiPost("/api/invoices", invoice))
-            .then((data) => {
+        const request = id
+            ? apiPut("/api/invoices/" + id, invoice)
+            : apiPost("/api/invoices", invoice);
+
+        request
+            .then(() => {
                 setSent(true);
                 setSuccess(true);
-                navigate("/invoice");
+                navigate("/invoices");
             })
-            .catch((error) => {
-                console.log(error.message);
-                setError(error.message);
+            .catch((err) => {
+                setError(err.message);
                 setSent(true);
                 setSuccess(false);
             });
     };
 
-    const sent = sentState;
-    const success = successState;
-
     return (
         <div>
             <h1>{id ? "Upravit" : "Vytvořit"} fakturu</h1>
-            <hr/>
-            {errorState ? (
-                <div className="alert alert-danger">{errorState}</div>
-            ) : null}
-            {sent && (
+            <hr />
+
+            {error && <div className="alert alert-danger">{error}</div>}
+
+            {sent && success && (
                 <FlashMessage
-                    theme={success ? "success" : ""}
-                    text={success ? "Uložení faktury proběhlo úspěšně." : ""}
+                    theme="success"
+                    text="Uložení faktury proběhlo úspěšně."
                 />
             )}
+
             <form onSubmit={handleSubmit}>
                 <InputField
-                    required={true}
+                    required
                     type="text"
-                    name="invoiceNumber"
-                    min="3"
                     label="Číslo faktury"
-                    prompt="Zadejte číslo faktury"
                     value={invoice.invoiceNumber}
-                    handleChange={(e) => {
-                        setInvoice({...invoice, invoiceNumber: e.target.value});
-                    }}
+                    handleChange={(e) =>
+                        setInvoice({ ...invoice, invoiceNumber: e.target.value })
+                    }
                 />
 
                 <InputSelect
-                    required={true}
-                    multiple={false}
+                    required
                     name="buyer"
                     label="Kupující"
                     prompt="Vyberte kupujícího"
                     items={persons}
-                    value={buyer}
-                    handleChange={(e) => {
-                        setInvoice({...invoice, buyer: e.target.value});
-                    }}
+                    value={invoice.buyer}
+                    handleChange={(e) =>
+                        setInvoice({ ...invoice, buyer: e.target.value })
+                    }
                 />
 
-
-
-
-                
-
-            
-            
+                <InputSelect
+                    required
+                    name="seller"
+                    label="Prodávající"
+                    prompt="Vyberte prodávajícího"
+                    items={persons}
+                    value={invoice.seller}
+                    handleChange={(e) =>
+                        setInvoice({ ...invoice, seller: e.target.value })
+                    }
+                />
 
                 <InputField
-                    required={true}
-                    type="text"
-                    name="issued"
-                    min="3"
-                    label="Číslo bankovního účtu"
-                    prompt="Zadejte číslo bankovního účtu"
+                    required
+                    type="date"
+                    label="Datum vystavení"
                     value={invoice.issued}
-                    handleChange={(e) => {
-                        setInvoice({...invoice, issued: e.target.value});
-                    }}
+                    handleChange={(e) =>
+                        setInvoice({ ...invoice, issued: e.target.value })
+                    }
                 />
 
                 <InputField
-                    required={true}
-                    type="text"
-                    name="dueDate"
-                    min="3"
-                    label="Kód banky"
-                    prompt="Zadejte kód banky"
+                    required
+                    type="date"
+                    label="Datum splatnosti"
                     value={invoice.dueDate}
-                    handleChange={(e) => {
-                        setInvoice({...invoice, dueDate: e.target.value});
-                    }}
+                    handleChange={(e) =>
+                        setInvoice({ ...invoice, dueDate: e.target.value })
+                    }
                 />
 
                 <InputField
-                    required={true}
+                    required
                     type="text"
-                    name="product"
-                    min="3"
-                    label="Produkt nebo Služba"
-                    prompt="Zadejte produkt nebo službu"
+                    label="Produkt / služba"
                     value={invoice.product}
-                    handleChange={(e) => {
-                        setInvoice({...invoice, product: e.target.value});
-                    }}
+                    handleChange={(e) =>
+                        setInvoice({ ...invoice, product: e.target.value })
+                    }
                 />
 
                 <InputField
-                    required={true}
-                    type="text"
-                    name="price"
-                    min="3"
+                    required
+                    type="number"
                     label="Cena"
-                    prompt="Zadejte cenu"
                     value={invoice.price}
-                    handleChange={(e) => {
-                        setInvoice({...invoice, price: e.target.value});
-                    }}
+                    handleChange={(e) =>
+                        setInvoice({ ...invoice, price: e.target.value })
+                    }
                 />
 
                 <InputField
-                    required={true}
-                    type="text"
-                    name="vat"
-                    min="3"
+                    required
+                    type="number"
                     label="DPH"
-                    prompt="Zadejte DPH"
                     value={invoice.vat}
-                    handleChange={(e) => {
-                        setInvoice({...invoice, vat: e.target.value});
-                    }}
+                    handleChange={(e) =>
+                        setInvoice({ ...invoice, vat: e.target.value })
+                    }
                 />
 
                 <InputField
-                    required={true}
                     type="text"
-                    name="note"
-                    min="3"
                     label="Poznámka"
-                    prompt="Zadejte poznámku"
                     value={invoice.note}
-                    handleChange={(e) => {
-                        setInvoice({...invoice, note: e.target.value});
-                    }}
+                    handleChange={(e) =>
+                        setInvoice({ ...invoice, note: e.target.value })
+                    }
                 />
 
-              
-                
-
-                <input type="submit" className="btn btn-primary" value="Uložit"/>
+                <input
+                    type="submit"
+                    className="btn btn-primary"
+                    value="Uložit"
+                />
             </form>
         </div>
     );

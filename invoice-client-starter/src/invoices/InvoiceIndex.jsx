@@ -9,6 +9,9 @@ import InputSelect from "../components/InputSelect";
 
 const InvoiceIndex = () => {
     const [invoices, setInvoices] = useState([]);
+    const [search, setSearch] = useState("");
+
+
 
     const deleteInvoice = async (id) => {
         try {
@@ -21,16 +24,20 @@ const InvoiceIndex = () => {
     };
 
     useEffect(() => {
-        apiGet("/api/invoices").then((data) => setInvoices(data));
-    }, []);
+    const params = new URLSearchParams();
+
+    if (search) params.append("product", search);
+
+    apiGet("/api/invoices?" + params.toString())
+        .then((data) => setInvoices(data));
+}, [search]);
+
 
     return (
         <div>
 
             <h1>Seznam faktur</h1>
-            <InputField label="Hledat fakturu podle čísla:" 
-             type="text"></InputField>
-                
+                            
             <InvoiceTable
                 deleteInvoice={deleteInvoice}
                 items={invoices}

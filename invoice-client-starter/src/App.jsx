@@ -38,7 +38,10 @@ import InvoiceDetail from "./invoices/InvoiceDetail";
 import InvoiceForm from "./invoices/InvoiceForm";
 import StatisticIndex from "./statistics/StatisticIndex";
 import PersonStatisticIndex from "./statistics/PersonStatisticIndex";
-
+import InvoiceSearch from "./invoices/InvoiceSearch";
+import PersonSearch from "./persons/PersonSearch";
+import InvoiceSales from "./invoices/InvoiceSales";
+import InvoicePurchases from "./invoices/InvoicePurchases";
 export function App() {
   return (
     <Router>
@@ -51,19 +54,20 @@ export function App() {
               </Link>
               <Link to={"/invoices"} className="nav-link">
                 Faktury
-              </Link>
-              <Link to={"api/identification/<str:identificationNumber>/purchases"} className="nav-link">
-                Nákupy osoby podle IČO
-              </Link>
-              <Link to={"api/identification/<str:identificationNumber>/sales"} className="nav-link">
-                Prodeje osoby podle IČO
-              </Link>
+              </Link>             
               <Link to={"api/statistics/invoices/"} className="nav-link">
                 Statistiky faktur
               </Link>
               <Link to={"api/statistics/persons/"} className="nav-link">
                 Statistiky osob
               </Link>
+              <Link to={"/invoices/search"} className="nav-link">
+                Vyhledávání faktur
+              </Link>
+              <Link to={"/persons/search"} className="nav-link">
+                Vyhledávání osob
+              </Link>
+              
             </li>
           </ul>
         </nav>
@@ -89,6 +93,11 @@ export function App() {
           <Route path="api/statistics/persons/">
             <Route index element={<PersonStatisticIndex />} />        
           </Route>
+          <Route path="/invoices/search" element={<InvoiceSearch />} />
+          <Route path="/persons/search" element={<PersonSearch />} />
+          <Route path="/persons/:ico/sales" element={<InvoiceSales />} />
+          <Route path="/persons/:ico/purchases" element={<InvoicePurchases />} />
+
           
         </Routes>
       </div>
