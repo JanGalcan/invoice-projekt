@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from ..serializers import InvoiceSerializer
-from ..serializers import Invoice
+from ..models import Invoice
 from ..services.invoices_service import InvoicesService
 
 class InvoiceViewSet(viewsets.ModelViewSet):
@@ -16,16 +16,16 @@ class InvoiceViewSet(viewsets.ModelViewSet):
         buyer_id = request.GET.get('buyer_id')
         seller_id = request.GET.get('seller_id')
         product = request.GET.get('product')
-        minPrice = request.GET.get('minPrice')
-        maxPrice = request.GET.get('maxPrice')
+        min_price = request.GET.get('min_price')
+        max_price = request.GET.get('max_price')
         limit = request.GET.get('limit')
         try:
             queryset = InvoicesService.filter_invoices(
                 buyer_id=buyer_id,
                 seller_id=seller_id,
                 product=product,
-                minPrice=minPrice,
-                maxPrice=maxPrice,
+                min_price=min_price,
+                max_price=max_price,
                 limit=limit
             )
         except ValueError as e:

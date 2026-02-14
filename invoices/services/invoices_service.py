@@ -2,14 +2,14 @@ from ..models import Invoice
 
 class InvoicesService:
     @staticmethod
-    def filter_invoices(buyer_id=None, seller_id=None, product=None, minPrice=None, maxPrice=None, limit=None, identification=None):
+    def filter_invoices(buyer_id=None, seller_id=None, product=None, min_price=None, max_price=None, limit=None, identification=None):
         queryset = Invoice.objects.all()
 
         print(f"buyer_id: {buyer_id}, "
               f"seller_id: {seller_id}, "
               f"product: {product}, "
-              f"minPrice: {minPrice}, "
-              f"maxPrice: {maxPrice}, "
+              f"min_price: {min_price}, "
+              f"max_price: {max_price}, "
               f"limit: {limit},"
               f"identification: {identification}")
 
@@ -19,18 +19,18 @@ class InvoicesService:
             queryset = queryset.filter(seller__id=seller_id)
         if product:
             queryset = queryset.filter(product__icontains=product)
-        if minPrice :
+        if min_price :
             try:
-                minPrice = float(minPrice)
-                queryset = queryset.filter(price__gte=minPrice)
+                min_price = float(min_price)
+                queryset = queryset.filter(price__gte=min_price)
             except ValueError:
-                raise ValueError("minPrice must be a valid number")
-        if maxPrice:
+                raise ValueError("min_price must be a valid number")
+        if max_price:
             try:
-                maxPrice = float(maxPrice)
-                queryset = queryset.filter(price__lte=maxPrice)
+                max_price = float(max_price)
+                queryset = queryset.filter(price__lte=max_price)
             except ValueError:
-                raise ValueError("maxPrice must be a valid number")
+                raise ValueError("max_price must be a valid number")
         if limit:
             try:
                 limit = int(limit)

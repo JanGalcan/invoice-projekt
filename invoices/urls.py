@@ -20,4 +20,3 @@ urlpatterns = [
     path('api/statistics/persons/', persons_statistics, name='persons-statistics')
 ]
 
- # fmsnitil@icloud.com max snitil
